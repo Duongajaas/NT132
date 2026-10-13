@@ -1,0 +1,123 @@
+export type DevicePlatform = "Web" | "Android" | "Ios" | "Desktop";
+
+export interface DeviceInfo {
+  deviceToken: string;
+  deviceName: string;
+  platform: DevicePlatform;
+}
+
+export interface Device {
+  id: string;
+  deviceName: string | null;
+  platform: DevicePlatform;
+  lastActiveAt: string | null;
+}
+
+export interface BlockedUser {
+  id: string;
+  username: string;
+  fullName: string;
+  avatarUrl: string | null;
+  blockedAt: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email: string | null;
+  phone: string | null;
+  fullName: string;
+  avatarUrl: string | null;
+  bio: string | null;
+  isVerified: boolean;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  accessTokenExpiresAt: string;
+  user: User;
+}
+
+export interface RegisterPayload {
+  fullName: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface ApiErrorResponse {
+  message: string;
+}
+
+export interface UpdateProfilePayload {
+  fullName: string;
+  bio?: string;
+  avatarUrl?: string;
+}
+
+export type ConversationType = "Direct" | "Group";
+export type RequestStatus = "Accepted" | "Pending" | "Rejected";
+
+export interface Conversation {
+  id: string;
+  name: string;
+  type: ConversationType;
+  peerUserId?: string;
+  avatarColor: string;
+  avatarUrl?: string | null;
+  lastMessage: string;
+  lastMessageAt: string;
+  unreadCount: number;
+  isOnline: boolean;
+  isBlocked?: boolean;
+  isAdmin?: boolean;
+  isHidden?: boolean;
+  hasLeft?: boolean;
+  role?: "Owner" | "Admin" | "Member";
+  permissions?: string[];
+  memberCount?: number;
+  version?: number;
+  closedAt?: string | null;
+  requestStatus?: RequestStatus;
+  createdAt?: string;
+  updatedAt?: string;
+  lastMessageId?: string | null;
+}
+
+export interface PinnedMessage { id: string; pinnedBy?: string | null; createdAt: string; message: ChatMessage; }
+
+export interface ChatMessage {
+  senderName?: string | null;
+  senderUsername?: string | null;
+  type?: string;
+  deliveryState?: import("./realtime/sendQueue").DeliveryState;
+  deliveryError?: string;
+  pendingSourceMessageId?: string;
+
+  replyToMessageId?: string | null;
+  replyPreview?: { id: string; senderName: string | null; contentSnippet: string | null; isAvailable: boolean; sequence?: number } | null;
+  isForwarded?: boolean;
+  mentions?: import("./utils/mentions").Mention[];
+  pendingMentions?: import("./utils/mentions").MentionInput[];
+  assetId?: string | null; mediaUrl?: string | null;
+  voiceDuration?: number | null;
+  waveformPoints?: string | null;
+  attachments?: { id: string; fileName: string | null; fileType: string | null; fileSize: number | null }[];
+  id: string;
+  conversationId: string;
+  senderId: string;
+  sequence: number;
+  content: string;
+  createdAt: string;
+  clientMessageId?: string;
+  status?: "Sending" | "Sent" | "Failed" | "Deleted" | "Hidden" | "Unavailable";
+}
+
+export interface MessageListResponse {
+  messages: ChatMessage[];
+  nextCursor?: number | null;
+  hasMore: boolean;
+  peerReadSequence?: number;
+}
+
+export interface ConversationPage { items: Conversation[]; nextCursor: string | null; }
