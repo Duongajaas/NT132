@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata: { name: probe, namespace: chat }
+spec:
+  restartPolicy: Never
+  containers:
+  - name: probe
+    image: busybox:1.28
+    command: ["sh", "-c"]
+    args:
+    - |
+      while true; do
+        if wget -q -T 2 -O /dev/null http://api-lb:8080/health/ready; then echo "$(date +%T) OK"; else echo "$(date +%T) FAIL"; fi
+        sleep 1
+      done

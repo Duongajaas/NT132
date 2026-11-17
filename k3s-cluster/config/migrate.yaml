@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata: { name: migrate, namespace: chat }
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: migrate
+        image: 192.168.56.10:5000/chat-be:v1
+        command: ["/app/efbundle"]
+        envFrom:
+        - configMapRef: { name: app-config }
+        - secretRef: { name: app-secret }
