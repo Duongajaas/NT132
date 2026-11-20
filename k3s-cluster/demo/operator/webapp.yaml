@@ -1,0 +1,9 @@
+
+apiVersion: lab.nt132.example/v1
+kind: WebApp
+metadata:
+  name: demo-web
+  namespace: k8s-demo
+spec:
+  image: nginx:alpine
+  replicas: 3

@@ -1,0 +1,36 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-operator
+  namespace: k8s-demo
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: webapp-operator
+  template:
+    metadata:
+      labels:
+        app: webapp-operator
+    spec:
+      serviceAccountName: webapp-operator
+      nodeSelector:
+        workload: chatapp
+      containers:
+        - name: operator
+          image: python:3.12-alpine
+          command:
+            - python
+            - -u
+            - /app/webapp_controller.py
+          volumeMounts:
+            - name: operator-code
+              mountPath: /app
+              readOnly: true
+      volumes:
+        - name: operator-code
+          configMap:
+            name: operator-code

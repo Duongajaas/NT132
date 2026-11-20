@@ -1,0 +1,47 @@
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: webapps.lab.nt132.example
+spec:
+  group: lab.nt132.example
+  scope: Namespaced
+  names:
+    plural: webapps
+    singular: webapp
+    kind: WebApp
+    shortNames:
+      - wa
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          required:
+            - spec
+          properties:
+            spec:
+              type: object
+              required:
+                - image
+                - replicas
+              properties:
+                image:
+                  type: string
+                  minLength: 1
+                replicas:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+      additionalPrinterColumns:
+        - name: Image
+          type: string
+          jsonPath: .spec.image
+        - name: Replicas
+          type: integer
+          jsonPath: .spec.replicas
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
